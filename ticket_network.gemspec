@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
   gem.name    = 'ticket_network'
-  gem.version = '0.0.1'
+  gem.version = '0.0.2'
   gem.summary = 'An interface library for the Ticket Network web service.'
 
   gem.files = Dir['lib/**/*']
