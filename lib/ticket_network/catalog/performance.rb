@@ -1,5 +1,5 @@
 module TicketNetwork::Catalog
-  class EventPerformer < Base
+  class Performance < Base
     class Parser
       include ParseHelper
 
