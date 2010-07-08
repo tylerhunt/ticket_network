@@ -40,7 +40,6 @@ module TicketNetwork::Catalog
           uri.to_s
         end
       end
-      private :find_map
     end
   end
 end
