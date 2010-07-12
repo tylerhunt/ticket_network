@@ -1,5 +1,5 @@
 require 'active_support/core_ext'
-require 'curb'
+require 'patron'
 require 'sax-machine'
 
 module TicketNetwork

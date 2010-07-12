@@ -36,20 +36,31 @@ module TicketNetwork
 
       # Executes the call to the web service.
       def perform
-        response = Curl::Easy.new(url)
+        uri = URI.parse(url)
+
+        session = Patron::Session.new
+        session.timeout = 60
+        session.base_url = "#{uri.scheme}://#{uri.host}:#{uri.port}/"
+
+        retries = 5
 
         begin
-          case @action.method
+          response = case @action.method
             when :get
-              response.http_get
+              session.get([uri.path, uri.query].compact.join('?'))
             when :post
-              response.http_post(query)
+              session.post(uri.path, uri.query)
           end
-        rescue Curl::Err::RecvError, Curl::Err::ConnectionFailedError, Curl::Err::HostResolutionError => e
-          raise NetworkError.new(e.to_s)
+        rescue Patron::PartialFileError, Patron::ConnectionFailed, Patron::HostResolutionError, Patron::TimeoutError
+          if (retries -= 1) > 0
+            retry
+          else
+            puts $!.inspect
+            raise #NetworkError.new($!.to_s)
+          end
         end
 
-        case body = response.body_str
+        case body = response.body
           when /^Authorization error: IP ([\d\.]+)/
             raise AuthorizationError, "Unauthorized IP (#{$1})"
           when /must be SSL/
