@@ -12,8 +12,8 @@ module TicketNetwork::Catalog
         element :id
         element :map_site
         element :map_url
-        element :type_description
-        element :type_id
+        element :type_description, :as => :name
+        element :type_id, :as => :id
         element :venue_id
       end
 
